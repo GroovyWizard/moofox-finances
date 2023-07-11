@@ -32,14 +32,14 @@
 
 <script>
 export default {
+    props: {
+        financeForm: {
+            type: Object,
+            required: true
+        },
+    }, 
     data() {
         return {
-            financeForm: {
-                name: "",
-                value: 0,
-                payTo: "",
-                dueDate: "",
-            }
         }
     }
 }
