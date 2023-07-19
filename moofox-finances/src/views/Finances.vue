@@ -1,12 +1,13 @@
 <template>
     <v-container class="fill-height">
         <v-responsive class="align-center text-center fill-height">
-            <v-row>
-                <v-col cols="12" class="text-end">
-                    <v-btn @click="toggleEditMode" density="default" icon="mdi-pencil"></v-btn>
+            <v-row class="text-end">
+                <v-col cols="12">
+                    <v-btn class="me-5" @click="toggleEditMode" density="default" elevation="5" icon="mdi-pencil"></v-btn>
+                    <v-btn class="" @click="refreshTable" elevation="5" density="default" icon="mdi-reload"></v-btn>
                 </v-col>
             </v-row>
-            <MonthlyTable v-if="editMode == false" />
+            <MonthlyTable ref="tableRef" :year="year" :month="month" v-if="editMode == false" />
 
             <FinancesManager v-if="editMode == true" />
           
@@ -17,6 +18,8 @@
 <script>
 import FinancesManager from "@/components/FinancesManager.vue"
 import MonthlyTable from "@/components/MonthlyTable.vue";
+import { ref } from 'vue';
+const tableRef = ref(0);
 export default {
     components: {
         FinancesManager,
@@ -41,6 +44,9 @@ export default {
     methods: {
         toggleEditMode() {
             this.editMode = this.editMode ^ true;
+        },
+        refreshTable() {
+            this.$refs.tableRef.loadItems();
         }
     }
 }

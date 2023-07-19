@@ -1,24 +1,27 @@
-
-
-
 <template>
-  <v-data-table
-    v-model:items-per-page="itemsPerPage"
-    :headers="headers"
-    :items="items"
-    item-value="id"
-    class="elevation-1"
-  ></v-data-table>
+  <v-data-table v-model:items-per-page="itemsPerPage" :headers="headers" :items="items" item-value="id"
+    class="elevation-1"></v-data-table>
 </template>
 <script>
 import axios from 'axios';
 export default {
+  expose: ['loadItems'],
+  props: {
+    year: {
+      type: Object,
+      required: true
+    },
+    month: {
+      type: Object,
+      required: true
+    }
+  },
   created() {
     this.loadItems();
   },
   methods: {
     loadItems() {
-        axios.get('http://localhost/api/table/list')
+      axios.get(`http://localhost/api/table/list/${this.$props.year}/${this.$props.month}`)
         .then(response => {
           console.log(response.data.finances)
           this.items = response.data.finances;
@@ -34,13 +37,15 @@ export default {
       itemsPerPage: 5,
       headers: [
         {
-          title: 'Dessert (100g serving)',
-          align: 'start',
-          sortable: false,
+          title: '#',
+          align: 'end',
+          sortable: true,
           key: 'id',
         },
-        { title: 'Name', align: 'end', key: 'name' },
-        { title: 'Fat (g)', align: 'end', key: 'value' },
+        { title: 'Name', align: 'start', key: 'name' },
+        { title: 'Price', align: 'end', key: 'price' },
+        { title: 'Receiver', align: 'center', key: 'receiver' },
+        { title: 'Due Date', align: 'center', key: 'dueDate' },
       ],
       items: [
 

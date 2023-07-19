@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('monthly_tables', function (Blueprint $table) {
             $table->id();
+            $table->integer('month');
+            $table->integer('year');
             $table->timestamps();
         });
     }

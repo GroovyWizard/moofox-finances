@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('finances', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('receiver');
+            $table->decimal('price', 8, 2);
+            $table->date('dueDate');
+            $table->unsignedBigInteger('monthly_table_id');
+            $table->foreign('monthly_table_id')->references('id')->on('monthly_tables');
             $table->timestamps();
         });
     }

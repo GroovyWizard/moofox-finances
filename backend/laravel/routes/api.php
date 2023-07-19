@@ -15,7 +15,7 @@ use App\Http\Controllers\MonthlyTableController;
 |
 */
 
-Route::get('/table/list', [MonthlyTableController::class, 'list']);
+Route::get('/table/list/{year}/{month}', [MonthlyTableController::class, 'list']);
 Route::get('/greeting', function () {
     return 'Hello World';
 });

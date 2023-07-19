@@ -35,7 +35,7 @@ export default {
     redirectToMonthTable() {
       console.log("here");
 
-      this.$router.push({ name: 'finances', params: { month: this.selectedMonth.month, year: this.selectedMonth.year } });
+      this.$router.push({ name: 'finances', params: { month: (this.selectedMonth.month + 1), year: this.selectedMonth.year } });
     },
   },
   data() {
