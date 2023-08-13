@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MonthlyTableController;
+use App\Http\Controllers\FinanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +16,11 @@ use App\Http\Controllers\MonthlyTableController;
 |
 */
 
+#Tables
 Route::get('/table/list/{year}/{month}', [MonthlyTableController::class, 'list']);
+
+#Finances
+Route::delete('/finance/delete/{itemId}', [FinanceController::class, 'delete']);
 Route::get('/greeting', function () {
     return 'Hello World';
 });

@@ -9,8 +9,8 @@
             </v-row>
             <MonthlyTable ref="tableRef" :year="year" :month="month" v-if="editMode == false" />
 
-            <FinancesManager v-if="editMode == true" />
-          
+            <FinancesManager ref="financesEditorRef" v-if="editMode == true" :month="month" :year="year" />
+
         </v-responsive>
     </v-container>
 </template>
@@ -46,7 +46,11 @@ export default {
             this.editMode = this.editMode ^ true;
         },
         refreshTable() {
-            this.$refs.tableRef.loadItems();
+            if (this.editMode == true) {
+
+                return this.$refs.financesEditorRef.loadItems();
+            }
+            return this.$refs.tableRef.loadItems();
         }
     }
 }

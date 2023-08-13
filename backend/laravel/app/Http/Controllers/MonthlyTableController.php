@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MonthlyTable;
 use Illuminate\Http\Request;
+use App\Models\Finance;
 use Response;
 
 class MonthlyTableController extends Controller
@@ -13,6 +14,8 @@ class MonthlyTableController extends Controller
         $table = MonthlyTable::with('finances')->where("year", "=", $year)->where("month", "=", $month)->firstOrFail();
         return Response::json($table, 200);
     }
+
+   
 
     public function addFinances(Request $request)
     {
