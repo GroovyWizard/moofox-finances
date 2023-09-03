@@ -1,40 +1,5 @@
 <template>
-    <h3> New Item</h3>
-
-    <div v-for="(item, index) in financeList" :key="index">
-        {{ item.id }}
-        <v-btn @click="showDeleteConfirmation(item)" icon="mdi-delete" color="danger">
-        </v-btn>
-        <FinanceForm :financeForm="item" />
-    </div>
-    <v-row class="mt-2">
-        <v-col cols="12">
-            <v-btn @click="addNewForm" icon="mdi-plus" color="primary">
-            </v-btn>
-        </v-col>
-    </v-row>
-
-    <template>
-        <v-dialog v-model="isDeleting" persistent width="auto">
-            <v-card>
-                <v-card-title class="text-h5">
-                    Deleting {{ itemToDelete.name }}
-                </v-card-title>
-                <v-card-text>
-                    Are you sure you want to delete {{ itemToDelete.name }} from the list? This action is irreversible!
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="blue-darken-1" variant="text" @click="closeDeleteConfirmation()">
-                        Cancel
-                    </v-btn>
-                    <v-btn color="red-darken-1" variant="text" @click="removeSelectedForm(itemToDelete.id)">
-                        Delete
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-    </template>
+    <FinanceForm :year="year" :month="month" :financeList="financesBackendList" />
 </template>
 
 <script>
@@ -73,20 +38,7 @@ export default {
         console.log(this.financesBackendList)
     },
     methods: {
-        saveItem(item) {
-            axios.post(`http://localhost/api/table/save/${this.$props.year}/${this.$props.month}/${item}`)
-                .then(response => {
-                    //change alert to msg
-                    alert("Saved item to database successfully");
-                    console.log(response);
-                })
-                .catch(error => {
-                    //change alert to msg
-                    alert("Error saving item to the database, please try again");
-                    console.error(error);
-                });
-
-        },
+        
         closeDeleteConfirmation() {
             this.isDeleting = false;
             this.itemToDelete = {};

@@ -15,10 +15,29 @@ class MonthlyTableController extends Controller
         return Response::json($table, 200);
     }
 
-   
 
-    public function addFinances(Request $request)
+
+    public function save(Request $request, $year, $month)
     {
+        $table = MonthlyTable::with('finances')->where("year", "=", $year)->where("month", "=", $month)->firstOrFail();
+
+        foreach ($request->input("items") as $item) {
+            Finance::updateOrCreate(
+                [
+                    'product_id' => $item["product_id"],
+                ],
+                [
+                    'monthly_table_id' => $table["id"],
+                    'name' => $item["name"],
+                    'price' => $item["price"],
+                    'receiver' => $item["receiver"],
+                    'dueDate' => $item["dueDate"],
+                ]
+            );
+            $table = MonthlyTable::with('finances')->where("year", "=", $year)->where("month", "=", $month)->firstOrFail();
+        }
+
+            return Response::json(['finances' => $table]);
 
     }
 }

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MonthlyTableController;
 use App\Http\Controllers\FinanceController;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,6 +19,7 @@ use App\Http\Controllers\FinanceController;
 
 #Tables
 Route::get('/table/list/{year}/{month}', [MonthlyTableController::class, 'list']);
+Route::post('/table/save/{year}/{month}', [MonthlyTableController::class, 'save']);
 
 #Finances
 Route::delete('/finance/delete/{itemId}', [FinanceController::class, 'delete']);
