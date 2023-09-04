@@ -11,13 +11,18 @@ class MonthlyTableController extends Controller
 {
     public function list(Request $request, $year, $month)
     {
+        MonthlyTable::updateOrCreate(
+            [
+                "year" => $year,
+                "month" => $month
+            ]
+        );
+
         $table = MonthlyTable::with('finances')->where("year", "=", $year)->where("month", "=", $month)->firstOrFail();
         return Response::json($table, 200);
     }
 
-
-
-    public function save(Request $request, $year, $month)
+    public function addFinances(Request $request, $year, $month)
     {
         $table = MonthlyTable::with('finances')->where("year", "=", $year)->where("month", "=", $month)->firstOrFail();
 
@@ -37,7 +42,7 @@ class MonthlyTableController extends Controller
             $table = MonthlyTable::with('finances')->where("year", "=", $year)->where("month", "=", $month)->firstOrFail();
         }
 
-            return Response::json(['finances' => $table]);
+        return Response::json(['finances' => $table]);
 
     }
 }

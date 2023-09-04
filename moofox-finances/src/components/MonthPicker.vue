@@ -1,23 +1,28 @@
 <template>
-  <v-container>
+  <v-container class="mx-auto text-center">
+    <v-row class="pa-5">
+      <v-col cols=12>
+          <p class="pick-hint">
+            Pick a month from the calendar below:
+          </p>
+      </v-col>
+    </v-row>
 
     <v-row>
       <v-col>
-        <h3>
-          Select a month:
-        </h3>
+        <img src="../assets/lottie/animation_lm48yiia_small.gif">
       </v-col>
     </v-row>
 
     <v-row class="date-picker text-center mx-auto">
       <v-col cols="12" class="">
-        <VueDatePicker v-model="selectedMonth" :month-picker="true"></VueDatePicker>
+        <VueDatePicker v-model="selectedMonth" :month-picker="true" ></VueDatePicker>
       </v-col>
 
     </v-row>
     <v-row>
       <v-col cols="12">
-        <v-btn color="info" @click="redirectToMonthTable()"> Continue </v-btn>
+        <v-btn :disabled="!isValidMonth" color="success" @click="redirectToMonthTableEditor()"> Continue </v-btn>
       </v-col>
     </v-row>
 
@@ -31,15 +36,23 @@ import '@vuepic/vue-datepicker/dist/main.css'
 
 export default {
   components: { VueDatePicker },
+  watch: {
+    selectedMonth(value) {
+      if(!value) {
+        this.isValidMonth = false;
+      } else {
+        this.isValidMonth = true;
+      }
+    }
+  },
   methods: {
-    redirectToMonthTable() {
-      console.log("here");
-
+    redirectToMonthTableEditor() {
       this.$router.push({ name: 'finances', params: { month: (this.selectedMonth.month + 1), year: this.selectedMonth.year } });
     },
   },
   data() {
     return {
+      isValidMonth: true,
       selectedMonth: {
         month: new Date().getMonth(),
         year: new Date().getFullYear()
@@ -58,5 +71,9 @@ export default {
 
 .date-picker {
   width: 50%;
+}
+
+.pick-hint {
+  font-size: large;
 }
 </style>

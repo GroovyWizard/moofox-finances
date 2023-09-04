@@ -4,7 +4,12 @@
             <div v-for="item in loadedFinanceList" :key="item.product_id">
                 <v-row>
                     <v-col cols="12">
-                        <h3> {{ item.name }}</h3>
+                        <h3> {{ item.name }} <span>
+
+                                <btn type="button" @click="deleteItem(item.id)"> <v-icon small color="red"> mdi-delete
+                                    </v-icon> </btn>
+
+                            </span></h3>
                     </v-col>
                 </v-row>
                 <v-row>
@@ -69,58 +74,84 @@ export default {
                 this.loadedFinanceList = value;
             }
         }
-
-        },
-        created() {
+    },
+    created() {
+        this.pushNewItemIfListHas0Length();
+    },
+    data() {
+        return {
+            loadedFinanceList: [],
+            defaultFinanceForm: {
+                id: 0,
+                product_id: "created-" + crypto.randomUUID(),
+                name: "New Item",
+                price: "",
+                receiver: "",
+                dueDate: "",
+            }
+        }
+    },
+    methods: {
+        pushNewItemIfListHas0Length() {
             if (this.$props.financeList.length <= 0) {
                 this.loadedFinanceList.push(this.defaultFinanceForm);
             }
+        }, 
+        deleteItem(itemId) {
+            const itemToRemove = this.loadedFinanceList.findIndex(form => form.id === itemId)
 
-        },
-        data() {
-            return {
-                loadedFinanceList: [],
-                defaultFinanceForm: {
-                    id: 0,
-                    product_id: "created-" + crypto.randomUUID(),
-                    name: "New Item",
-                    price: "",
-                    receiver: "",
-                    dueDate: "",
-                }
+            if (itemToRemove !== -1) {
+                //change alert to msg
+                this.financeList.splice(itemToRemove, 1);
             }
-        },
-        methods: {
-            addNewItem() {
-                let newItem = {
-                    id: 0,
-                    product_id: "created-" + crypto.randomUUID(),
-                    name: "New Item",
-                    price: "",
-                    receiver: "",
-                    dueDate: "",
-                };
 
-                this.loadedFinanceList.push(newItem);
-            },
-            saveList() {
-                axios.post(`http://localhost/api/table/save/${this.$props.year}/${this.$props.month}`,
-                    { 'items': this.loadedFinanceList })
+            if (itemId !== 0) {
+                axios.delete(`http://localhost/api/finance/delete/${itemId}`)
                     .then(response => {
-                        //change alert to msg
-                        alert("Saved item to database successfully");
                         console.log(response);
+                        alert("Deleted");
+                        return true;
                     })
                     .catch(error => {
-                        //change alert to msg
-                        alert("Error saving item to the database, please try again");
                         console.error(error);
+                        return false;
                     });
+            } else {
+                alert("Deleted");
+            }
+            this.pushNewItemIfListHas0Length();
 
-            },
+        },
+        addNewItem() {
+            let newItem = {
+                id: 0,
+                product_id: "created-" + crypto.randomUUID(),
+                name: "New Item",
+                price: "",
+                receiver: "",
+                dueDate: "",
+            };
 
-        }
+            this.loadedFinanceList.push(newItem);
+        },
+        saveList() {
+            axios.post(`http://localhost/api/table/save/${this.$props.year}/${this.$props.month}`,
+                { 'items': this.loadedFinanceList })
+                .then(response => {
+                    //change alert to msg
+                    alert("Saved item to database successfully");
+                    console.log(response);
+                })
+                .catch(error => {
+                    //change alert to msg
+                    alert("Error saving item to the database, please try again");
+                    console.error(error);
+                });
+
+        },
+
     }
+}
 
 </script>
 

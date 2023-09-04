@@ -10,6 +10,7 @@ use App\Models\Finance;
 class MonthlyTable extends Model
 {
     use HasFactory;
+    protected $fillable = ['year', 'month'];
 
 
     public function finances(): HasMany

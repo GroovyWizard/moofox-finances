@@ -19,10 +19,7 @@ use App\Http\Controllers\FinanceController;
 
 #Tables
 Route::get('/table/list/{year}/{month}', [MonthlyTableController::class, 'list']);
-Route::post('/table/save/{year}/{month}', [MonthlyTableController::class, 'save']);
+Route::post('/table/save/{year}/{month}', [MonthlyTableController::class, 'addFinances']);
 
 #Finances
 Route::delete('/finance/delete/{itemId}', [FinanceController::class, 'delete']);
-Route::get('/greeting', function () {
-    return 'Hello World';
-});

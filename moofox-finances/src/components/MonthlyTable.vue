@@ -1,6 +1,15 @@
 <template>
-  <v-data-table v-model:items-per-page="itemsPerPage" :headers="headers" :items="items" item-value="id"
-    class="elevation-1"></v-data-table>
+  <v-row>
+    <v-col cols="12" class="">
+        <p class="text-left"> Total value: <b>  $ {{ totalPriceThisMonth() }} </b> </p> 
+    </v-col>
+  </v-row>
+  <v-row>
+    <v-col cols="12">
+      <v-data-table v-model:items-per-page="itemsPerPage" :headers="headers" :items="items" item-value="id"
+        class="elevation-1"></v-data-table>
+    </v-col>
+  </v-row>
 </template>
 <script>
 import axios from 'axios';
@@ -20,6 +29,14 @@ export default {
     this.loadItems();
   },
   methods: {
+    totalPriceThisMonth() {
+      let totalPrice = 0;
+      for (const item of this.items) {
+        totalPrice += parseFloat(item.price);
+      }
+      return totalPrice;
+
+    },
     loadItems() {
       axios.get(`http://localhost/api/table/list/${this.$props.year}/${this.$props.month}`)
         .then(response => {
@@ -42,7 +59,7 @@ export default {
           sortable: true,
           key: 'id',
         },
-        { title: 'Name', align: 'start', key: 'name' },
+        { title: 'Name', align: 'center', key: 'name' },
         { title: 'Price', align: 'end', key: 'price' },
         { title: 'Receiver', align: 'center', key: 'receiver' },
         { title: 'Due Date', align: 'center', key: 'dueDate' },
