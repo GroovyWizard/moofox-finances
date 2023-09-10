@@ -6,7 +6,7 @@
                     <v-btn class="ml-2 me-2 " @click="goBack" elevation="5" density="default" icon="mdi-arrow-left">
                     </v-btn>
                     <v-btn class="me-2 text-end" @click="toggleEditMode" density="default" elevation="5"
-                        icon="mdi-pencil"></v-btn>
+                        :icon="getIconByMode()"></v-btn>
                     <v-btn class="text-end" @click="refreshTable" elevation="5" density="default" icon="mdi-reload"></v-btn>
                 </v-col>
             </v-row>
@@ -44,6 +44,10 @@ export default {
         }
     },
     methods: {
+        getIconByMode() {
+            return this.editMode == true ? "mdi-table-eye" : "mdi-pencil";
+
+        },
         goBack() {
             this.$router.push({ name: 'Home' });
         },

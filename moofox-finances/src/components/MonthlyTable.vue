@@ -7,7 +7,13 @@
   <v-row>
     <v-col cols="12">
       <v-data-table v-model:items-per-page="itemsPerPage" :headers="headers" :items="items" item-value="id"
-        class="elevation-1"></v-data-table>
+        class="elevation-1">
+         <template v-slot:item.price="{ item }">
+          <v-chip color="success">
+            $ {{ item.columns.price }}
+          </v-chip>
+    </template>
+      </v-data-table>
     </v-col>
   </v-row>
 </template>
@@ -54,14 +60,14 @@ export default {
       itemsPerPage: 5,
       headers: [
         {
-          title: '#',
+          title: 'Id',
           align: 'end',
           sortable: true,
           key: 'id',
         },
         { title: 'Name', align: 'center', key: 'name' },
-        { title: 'Price', align: 'end', key: 'price' },
-        { title: 'Receiver', align: 'center', key: 'receiver' },
+        { title: 'Price', align: 'center', key: 'price' },
+        { title: 'Receiver', align: 'center', key: 'receiver_name' },
         { title: 'Due Date', align: 'center', key: 'dueDate' },
       ],
       items: [

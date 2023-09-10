@@ -1,7 +1,23 @@
 <template>
     <v-container class="form-container">
+        <v-dialog persistent width="50%" v-model="showPopupReceivers" 
+            style="background-color: rgba(255, 255, 255, 0.171);">
+            <v-autocomplete variant="solo" label="Existing Receivers" item-title="name" item-value="name"
+                v-model="autoCompleteReceiver" :items="receiverList"></v-autocomplete>
+            <v-row class="text-start">
+                <v-col class="" cols="12">
+                    <v-btn class="me-4" color="success" @click="insertReceiverIntoItem">
+                        Select
+                    </v-btn>
+                    <v-btn color="primary" @click="closePopup">Close</v-btn>
+                </v-col>
+            </v-row>
+        </v-dialog>
         <v-form class="pa-5">
             <div v-for="item in loadedFinanceList" :key="item.product_id">
+
+
+
                 <v-row>
                     <v-col cols="12">
                         <h3> {{ item.name }} <span>
@@ -23,13 +39,21 @@
                 <v-row>
                     <v-col cols="12" md="6">
 
-                        <v-text-field variant="solo" v-model="item.receiver"
-                            label="Who will receive the money:"></v-text-field>
+                        <v-text-field variant="solo" v-model="item.receiver_name" label="Who will receive the money:">
+                            <template v-slot:append-inner>
+                                <v-btn elevation="0" @click="showPopup(item)">
+                                    <v-icon icon="mdi-account-search" />
+                                </v-btn>
+                            </template>
+                        </v-text-field>
+
+
                     </v-col>
                     <v-col cols="12" md="6">
                         <v-text-field variant="solo" v-model="item.dueDate" label="Due date of this item"></v-text-field>
 
                     </v-col>
+
                 </v-row>
 
             </div>
@@ -77,16 +101,21 @@ export default {
     },
     created() {
         this.pushNewItemIfListHas0Length();
+        this.populateReceiverList();
     },
     data() {
         return {
+            currentItemProductId: undefined,
+            showPopupReceivers: false,
+            autoCompleteReceiver: "",
+            receiverList: [],
             loadedFinanceList: [],
             defaultFinanceForm: {
                 id: 0,
                 product_id: "created-" + crypto.randomUUID(),
                 name: "New Item",
                 price: "",
-                receiver: "",
+                receiver_name: "",
                 dueDate: "",
             }
         }
@@ -96,15 +125,17 @@ export default {
             if (this.$props.financeList.length <= 0) {
                 this.loadedFinanceList.push(this.defaultFinanceForm);
             }
-        }, 
+        },
         deleteItem(itemId) {
             const itemToRemove = this.loadedFinanceList.findIndex(form => form.id === itemId)
 
             if (itemToRemove !== -1) {
-                //change alert to msg
                 this.financeList.splice(itemToRemove, 1);
             }
 
+            //Item id 0 only applies to objects not save to the database yet
+            //So if the id is equal to 0 there is no reason to send it to backend for deletion
+            //then we only delete it in frontend.
             if (itemId !== 0) {
                 axios.delete(`http://localhost/api/finance/delete/${itemId}`)
                     .then(response => {
@@ -128,7 +159,7 @@ export default {
                 product_id: "created-" + crypto.randomUUID(),
                 name: "New Item",
                 price: "",
-                receiver: "",
+                receiver_name: "",
                 dueDate: "",
             };
 
@@ -149,6 +180,42 @@ export default {
                 });
 
         },
+        populateReceiverList() {
+            axios.get(`http://localhost/api/receivers/list?mode="names"`)
+                .then(response => {
+                    this.receiverList = response.data;
+                    console.log(response);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
+        insertReceiverIntoItem() {
+            if (!this.currentItemProductId) {
+                return;
+            }
+            const itemToUpdate =
+                this.loadedFinanceList.findIndex(
+                    form => form.product_id === this.currentItemProductId
+                )
+
+
+            //Cant use itemToUpdate because it validates 0 as false.
+            if (itemToUpdate !== null || itemToUpdate !== undefined) {
+                this.loadedFinanceList[itemToUpdate].receiver_name =
+                    this.autoCompleteReceiver;
+            }
+        },
+        showPopup(item) {
+            this.populateReceiverList();
+            this.currentItemProductId = item.product_id;
+            this.showPopupReceivers = true;
+        },
+        closePopup() {
+            // Very important, so the product id from the current item gets cleared correctly
+            this.currentItemProductId = undefined;
+            this.showPopupReceivers = false;
+        }
 
     }
 }

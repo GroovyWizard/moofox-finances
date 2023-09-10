@@ -25,7 +25,7 @@
           <v-icon>mdi-calendar-month</v-icon>
         </v-btn>
 
-        <v-btn icon>
+        <v-btn icon @click="openGithubUrl()">
           <v-icon>mdi-github</v-icon>
         </v-btn>
       </v-app-bar>
@@ -41,10 +41,16 @@
 </template>
 
 <script>
-import { SITE_NAME } from '@/configs/global-config';
+import { SITE_NAME, GITHUB_URL } from '@/configs/global-config';
 export default {
+  methods: {
+     openGithubUrl() {
+      window.open(this.GITHUB_URL, '_blank');
+    }
+  },
   data() {
     return {
+      GITHUB_URL: GITHUB_URL,
       SITE_NAME: SITE_NAME,
     };
   }

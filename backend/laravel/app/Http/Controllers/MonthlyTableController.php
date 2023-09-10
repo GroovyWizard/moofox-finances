@@ -19,6 +19,10 @@ class MonthlyTableController extends Controller
         );
 
         $table = MonthlyTable::with('finances')->where("year", "=", $year)->where("month", "=", $month)->firstOrFail();
+        foreach ($table->finances as $finance) {
+            $finance->receiver_name = $finance->receiver->name;
+        }
+
         return Response::json($table, 200);
     }
 
@@ -27,18 +31,7 @@ class MonthlyTableController extends Controller
         $table = MonthlyTable::with('finances')->where("year", "=", $year)->where("month", "=", $month)->firstOrFail();
 
         foreach ($request->input("items") as $item) {
-            Finance::updateOrCreate(
-                [
-                    'product_id' => $item["product_id"],
-                ],
-                [
-                    'monthly_table_id' => $table["id"],
-                    'name' => $item["name"],
-                    'price' => $item["price"],
-                    'receiver' => $item["receiver"],
-                    'dueDate' => $item["dueDate"],
-                ]
-            );
+            Finance::buildFinance($item, $table->id);
             $table = MonthlyTable::with('finances')->where("year", "=", $year)->where("month", "=", $month)->firstOrFail();
         }
 

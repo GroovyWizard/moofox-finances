@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ReceiverController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MonthlyTableController;
@@ -23,3 +24,6 @@ Route::post('/table/save/{year}/{month}', [MonthlyTableController::class, 'addFi
 
 #Finances
 Route::delete('/finance/delete/{itemId}', [FinanceController::class, 'delete']);
+
+#Receivers
+Route::get('/receivers/list', [ReceiverController::class, 'list']);

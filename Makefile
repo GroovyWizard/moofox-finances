@@ -12,3 +12,6 @@ run:
 
 sh:
 	docker exec -it --user=root laravel-laravel.test-1 /bin/bash
+
+migrate:
+	docker exec -it --user=root laravel-laravel.test-1 /bin/bash -c "php artisan migrate"
