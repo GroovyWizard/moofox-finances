@@ -21,6 +21,7 @@ use App\Http\Controllers\FinanceController;
 #Tables
 Route::get('/table/list/{year}/{month}', [MonthlyTableController::class, 'list']);
 Route::post('/table/save/{year}/{month}', [MonthlyTableController::class, 'addFinances']);
+Route::get('/table/csv/{year}/{month}', [MonthlyTableController::class, 'convertToCsv']);
 
 #Finances
 Route::delete('/finance/delete/{itemId}', [FinanceController::class, 'delete']);

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\MonthlyTable;
 use App\Models\Receiver;
+use Carbon\Carbon;
 
 
 class Finance extends Model
@@ -15,8 +16,18 @@ class Finance extends Model
     use HasFactory;
     protected $fillable = ['name', 'receiver', 'price', 'dueDate', 'monthly_table_id', 'product_id'];
 
+    public static function validateForm($payload) {
+        if(!isset($payload['name']) || !isset($payload['price'])) {
+            throw new \Exception("Name and price are required!");
+        }
+    }
     public static function buildFinance($payload, $tableId)
     {
+        if(isset($payload['dueDate'])) {
+
+            $payload['dueDate'] = Carbon::parse($payload['dueDate']);
+        }
+
         $finance = Finance::updateOrCreate(
             [
                 'product_id' => $payload["product_id"],

@@ -18,8 +18,8 @@
       <v-col cols="12" class="">
         <VueDatePicker v-model="selectedMonth" :month-picker="true" ></VueDatePicker>
       </v-col>
-
     </v-row>
+
     <v-row>
       <v-col cols="12">
         <v-btn :disabled="!isValidMonth" color="success" @click="redirectToMonthTableEditor()"> Continue </v-btn>

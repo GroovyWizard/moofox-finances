@@ -1,7 +1,6 @@
 <template>
     <v-container class="form-container">
-        <v-dialog persistent width="50%" v-model="showPopupReceivers" 
-            style="background-color: rgba(255, 255, 255, 0.171);">
+        <v-dialog persistent width="50%" v-model="showPopupReceivers" style="background-color: rgba(255, 255, 255, 0.171);">
             <v-autocomplete variant="solo" label="Existing Receivers" item-title="name" item-value="name"
                 v-model="autoCompleteReceiver" :items="receiverList"></v-autocomplete>
             <v-row class="text-start">
@@ -50,8 +49,10 @@
 
                     </v-col>
                     <v-col cols="12" md="6">
-                        <v-text-field variant="solo" v-model="item.dueDate" label="Due date of this item"></v-text-field>
-
+                        <v-text-field class="date-pick-wrapper" variant="solo">
+                            <VueDatePicker class="date-pick" :auto-apply="true" :teleport="true" :enable-time-picker=false v-model="item.dueDate">
+                            </VueDatePicker>
+                        </v-text-field>
                     </v-col>
 
                 </v-row>
@@ -75,8 +76,12 @@
 
 <script>
 import axios from 'axios';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
+
 
 export default {
+    components: { VueDatePicker },
     props: {
         year: {
             type: Object,
@@ -106,6 +111,7 @@ export default {
     data() {
         return {
             currentItemProductId: undefined,
+            selectedDate: undefined,
             showPopupReceivers: false,
             autoCompleteReceiver: "",
             receiverList: [],
@@ -233,4 +239,15 @@ export default {
     width: 50%;
     background-color: rgba(231, 219, 219, 0.527)
 }
-</style>
+
+.date-pick-wrapper {
+    position: relative;
+}
+
+.date-pick {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    width: 92%;
+}</style>
